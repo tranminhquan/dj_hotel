@@ -26,6 +26,10 @@ class RegisterBillForm extends React.Component {
             results: response.data
           });
           console.log('Info back from database',this.state.results);
+
+          // callback to parent for updating
+          this.props.callback(true, this.props.room_id);
+
     		})
         console.log('Received values of form: ', values);
       }

@@ -17,6 +17,12 @@ class SearchBillForm extends React.Component {
     user_info: null,
   };
 
+  updateInfoCallback = (isSubmited, room_id) => {
+    if (isSubmited == true){
+      this.updateUserInfo(room_id)
+    }
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
@@ -24,26 +30,29 @@ class SearchBillForm extends React.Component {
         values['ROOM_ID'] === undefined ? '' : values['ROOM_ID'];
 
       if (!err) {
-        axios.get('http://127.0.0.1:8000/api/billing/'+
-        '?user__room_id__iexact='+room_id)
-        .then((response) => {
-          console.log('Data retrun from server',response.data);
-    			this.setState({
-            results: response.data
-          });
-        });
-
-        axios.get('http://127.0.0.1:8000/api/user/' + room_id)
-        .then((response) => {
-          console.log('Data retrun from server',response.data);
-    			this.setState({
-            user_info: response.data
-          });
-        });
-
+        this.updateUserInfo(room_id)
       }
     });
   };
+
+  updateUserInfo(room_id){
+    axios.get('http://127.0.0.1:8000/api/billing/'+
+    '?user__room_id__iexact='+room_id)
+    .then((response) => {
+      console.log('Data retrun from server',response.data);
+      this.setState({
+        results: response.data
+      });
+    });
+
+    axios.get('http://127.0.0.1:8000/api/user/' + room_id)
+    .then((response) => {
+      console.log('Data retrun from server',response.data);
+      this.setState({
+        user_info: response.data
+      });
+    });
+  }
 
 
   render() {
@@ -95,7 +104,7 @@ class SearchBillForm extends React.Component {
           </Form.Item>
         </Form>
         
-        <BillingFormResult bill={this.state.results} user={this.state.user_info} />
+        <BillingFormResult bill={this.state.results} user={this.state.user_info} callback={this.updateInfoCallback} />
       </div>
     
     );

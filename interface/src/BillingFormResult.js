@@ -5,6 +5,7 @@ import RegisterBillForm from './RegisterBillForm.js'
 
 
 class BillingFormResult extends React.Component {
+ 
   render() {
     //table
     const columns = [
@@ -106,7 +107,7 @@ class BillingFormResult extends React.Component {
           <Table dataSource={dataSource} columns={columns} />
           
           <PageHeader title="HOA DON CHUA THANH TOAN THANG NAY" tags={<Tag color="red">Warning</Tag>}>
-            <RegisterBillForm room_id={user.room_id} month={(new Date()).getMonth()} year={(new Date()).getFullYear()} />
+            <RegisterBillForm room_id={user.room_id} month={(new Date()).getMonth()} year={(new Date()).getFullYear()} callback={this.props.callback}/>
           </PageHeader>
           </div>
       )
@@ -134,7 +135,6 @@ class BillingFormResult extends React.Component {
       }
     }
   }
-
 }
 
 export default BillingFormResult;
