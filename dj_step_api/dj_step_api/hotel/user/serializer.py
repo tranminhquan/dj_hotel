@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from user.models import User, Billing
+from user.models import User, Billing, Transferation
 import datetime
 
 # constant
@@ -39,6 +39,11 @@ class BillingSerializer(serializers.ModelSerializer):
 	# 			self.cal_electricity_price(instance) + \
 	# 			self.cal_bike_price(instance) + \
 	# 			instance.surchage
+
+class TransferationSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Transferation
+		fields = '__all__'
 
 
 

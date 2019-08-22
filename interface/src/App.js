@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 import RegistrationForm from './Form.js';
 import SearchBillForm from './Billing.js'
-import RegisterBillForm from './RegisterBillForm.js'
+import RegisterTransferation from './RegisterTransferation.js'
 
 import { PageHeader, Tag, Statistic, Row, Col } from 'antd';
 import UploadImg from './Upload.js';
@@ -71,9 +71,8 @@ class App extends Component {
         </PageHeader>
 
         <PageHeader title="MỤC CHUYỂN PHÒNG">
-          
+          <RegisterTransferation/>
         </PageHeader>
-
 
 
       </div>

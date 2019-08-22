@@ -1,7 +1,7 @@
-from user.models import User, Billing
+from user.models import User, Billing, Transferation
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
-from .serializer import UserSerializer, BillingSerializer
+from .serializer import UserSerializer, BillingSerializer, TransferationSerializer
 from django_filters import rest_framework as filters
 
 # filter
@@ -46,4 +46,10 @@ class BillingViewSet(viewsets.ModelViewSet):
 	# def create(self, request, *args, **kwargs):
 	# 	try:
 	# 		return super(BillingViewSet, self).create(request, *args, **kwargs)
-	
+
+class TransferationViewSet(viewsets.ModelViewSet):
+	queryset = Transferation.objects.all()
+	permissions_classes = [
+		permissions.AllowAny
+	]
+	serializer_class = TransferationSerializer

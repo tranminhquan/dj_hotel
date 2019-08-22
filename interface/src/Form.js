@@ -6,7 +6,7 @@ import {
   Form,
   Input,
   Button,
-  
+  DatePicker
 } from 'antd';
 
 
@@ -67,6 +67,16 @@ class RegistrationForm extends React.Component {
     return (
       <div>
         <Form {...formItemLayout} onSubmit={this.handleSubmit} >
+          <Form.Item label="Ngay bat dau thue" hasFeedback>
+            {getFieldDecorator('start_date', {
+              rules: [{
+                required: true,
+                message: 'Dien ngay bat dau thue',
+              },
+              ]
+            })(<DatePicker format={'YYYY-MM-DD'}/>)}
+          </Form.Item>
+
           <Form.Item label="Tên Người Thuê " hasFeedback>
             {getFieldDecorator('customer_name', {
               rules: [
