@@ -37,7 +37,7 @@ class SearchBillForm extends React.Component {
 
   updateUserInfo(room_id){
     axios.get('http://127.0.0.1:8000/api/billing/'+
-    '?user__room_id__iexact='+room_id)
+    '?user__iexact='+room_id)
     .then((response) => {
       console.log('Data retrun from server',response.data);
       this.setState({

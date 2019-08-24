@@ -21,9 +21,7 @@ class BillingFilter(filters.FilterSet):
 	class Meta:
 		model = Billing
 		fields = {
-			'user__customer_id': ['iexact'],
-			'user__room_id': ['iexact'],
-			'user__customer_name': ['icontains'],
+			'user': ['iexact'],
 		}
 
 # Viewset

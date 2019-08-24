@@ -7,7 +7,7 @@ ELECTRICITY_PRICE_CONST = 3000
 BIKE_PRICE_CONST = 100
 
 def get_latest_bill(room_id):
-	bills = Billing.objects.all().filter(user__room_id=room_id)
+	bills = Billing.objects.all().filter(user=room_id)
 		
 	if len(bills) == 0: # there is no bill before
 		return 0
@@ -48,13 +48,15 @@ class User(models.Model):
 
 class Billing(models.Model):
 	billing_id = models.AutoField(primary_key=True)
-	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	# user = models.ForeignKey(User, on_delete=models.SET_NULL)
+	user = models.IntegerField()
 	date = models.DateTimeField(auto_now_add = True)
 	water_start_num = models.IntegerField(default=0, editable=False)
 	water_end_num = models.IntegerField(default=0)
 	electricity_start_num = models.IntegerField(default=0, editable=False)
 	electricity_end_num = models.IntegerField(default=0)
 	surchage = models.IntegerField(default=0)
+	new_room = models.IntegerField(default=-1, editable=True)
 	# paid = models.BooleanField(default=False)
 
 
@@ -63,7 +65,7 @@ class Billing(models.Model):
 	
 	def get_water_start_num(self):
 		if self._state.adding:
-			b = get_latest_bill(self.user.room_id)
+			b = get_latest_bill(self.user)
 			if b == 0:
 				return 0
 			return b.water_end_num
@@ -72,7 +74,7 @@ class Billing(models.Model):
 	
 	def get_electricity_start_num(self):
 		if self._state.adding:
-			b = get_latest_bill(self.user.room_id)
+			b = get_latest_bill(self.user)
 			if b == 0:
 				return 0
 			return b.electricity_end_num
@@ -80,7 +82,7 @@ class Billing(models.Model):
 		return self.electricity_start_num
 
 	def save(self, *args, **kwargs):
-		b = get_latest_bill(self.user.room_id)
+		b = get_latest_bill(self.user)
 
 		if b == 0:
 			self.water_start_num = 0
@@ -101,7 +103,16 @@ class Billing(models.Model):
 
 
 	def get_bike_price(self):
-		return (self.user.num_bike) * BIKE_PRICE_CONST
+		print(self.new_room)
+		if self.new_room != -1:
+			u = User.objects.filter(room_id=self.new_room)
+		else:
+			u = User.objects.filter(room_id=self.user)
+		print(len(u))
+		if len(u) == 0:
+			return 0
+
+		return (u[0].num_bike) * BIKE_PRICE_CONST
 
 	def get_total_price(self):
 		return self.get_water_price() + self.get_electricity_price() + self.get_bike_price() + self.surchage
@@ -148,6 +159,12 @@ class Transferation(models.Model):
 
 			delete_record = User.objects.filter(room_id=self.old_room_id)
 			changed_user = delete_record[0]
+			bs = Billing.objects.filter(user=self.old_room_id)
+			b = bs[0]
+			b.new_room = self.new_room_id
+			b.save()
+			print(self.new_room_id)
+			print('b new room: ', b.new_room)
 			delete_record[0].delete()
 			changed_user.room_id = self.new_room_id
 			changed_user.start_date = self.start_date
